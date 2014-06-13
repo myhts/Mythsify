@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title>The Powershell Project Demo</title>
+  <link rel="shortcut icon" href="http://designshack.net/favicon.ico">
+  <link rel="icon" href="http://designshack.net/favicon.ico">
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <style>
+/** resets **/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html { height: 101%; }
+body { 
+  background: #f0f0f0 ; 
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #313131;
+  font-size: 62.5%; 
+  line-height: 1; 
+}
+
+::selection { background: #a4dcec; }
+::-moz-selection { background: #a4dcec; }
+::-webkit-selection { background: #a4dcec; }
+
+::-webkit-input-placeholder { /* WebKit browsers */
+  color: #ccc;
+  font-style: italic;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: #ccc;
+  font-style: italic;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #ccc;
+  font-style: italic;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: #ccc !important;
+  font-style: italic;  
+}
+
+br { display: block; line-height: 2.2em; } 
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+ol, ul { list-style: none; }
+
+input, textarea { 
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none; 
+}
+
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+strong { font-weight: bold; } 
+
+table { border-collapse: collapse; border-spacing: 0; }
+img { border: 0; max-width: 100%; }
+
+#topbar {
+  background: #4f4a41;
+  padding: 10px 0 10px 0;
+  text-align: center;
+}
+
+#topbar a {
+  color: #fff;
+  font-size:1.3em;
+  line-height: 1.25em;
+  text-decoration: none;
+  opacity: 0.5;
+  font-weight: bold;
+}
+
+#topbar a:hover {
+  opacity: 1;
+}
+
+/** typography **/
+h1 {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 2.5em;
+  line-height: 1.5em;
+  letter-spacing: -0.05em;
+  margin-bottom: 20px;
+  padding: .1em 0;
+  color: #444;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+}
+h1:before,
+h1:after {
+  content: "";
+  position: relative;
+  display: inline-block;
+  width: 50%;
+  height: 1px;
+  vertical-align: middle;
+  background: #f0f0f0;
+}
+h1:before {    
+  left: -.5em;
+  margin: 0 0 0 -50%;
+}
+h1:after {    
+  left: .5em;
+  margin: 0 -50% 0 0;
+}
+h1 > span {
+  display: inline-block;
+  vertical-align: middle;
+  white-space: normal;
+}
+
+p {
+  display: block;
+  font-size: 1.35em;
+  line-height: 1.5em;
+  margin-bottom: 22px;
+}
+
+a { color: #5a9352; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.center { display: block; text-align: center; }
+
+
+/** page structure **/
+#w {
+  display: block;
+  width: 750px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+
+#content {
+  display: block;
+  width: 100%;
+  background: #fff;
+  padding: 25px 20px;
+  padding-bottom: 35px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
+
+#searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px; }
+
+#searchfield form {
+  display: inline-block;
+  background: #eeefed;
+  padding: 0;
+  margin: 0;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 5px 0 0 0;
+}
+#searchfield form .biginput {
+  width: 600px;
+  height: 40px;
+  padding: 0 10px 0 10px;
+  background-color: #fff;
+  border: 1px solid #c8c8c8;
+  border-radius: 3px;
+  color: #aeaeae;
+  font-weight:normal;
+  font-size: 1.5em;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+#searchfield form .biginput:focus {
+  color: #858585;
+}
+
+
+
+.flatbtn {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  color: #f3faef;
+  text-decoration: none;
+  background-color: #6bb642;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 12px 22px 12px 22px;
+  line-height: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 1px 0 rgba(15, 15, 15, 0.3);
+  -moz-box-shadow: 0 1px 0 rgba(15, 15, 15, 0.3);
+  box-shadow: 0 1px 0 rgba(15, 15, 15, 0.3);
+}
+.flatbtn:hover {
+  color: #fff;
+  background-color: #73c437;
+}
+.flatbtn:active {
+  -webkit-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow:inset 0 1px 5px rgba(0, 0, 0, 0.1);
+  box-shadow:inset 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
+.autocomplete-suggestion { padding: 10px 5px; font-size: 1.2em; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #f0f0f0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+
+label{
+display:inline-block;
+width:100px;
+margin-right:30px;
+text-align:right;
+}
+
+input{
+
+}
+
+fieldset{
+border:none;
+width:670px;
+margin:0px auto;
+}
+
+.button {
+   border-top: 1px solid #96d1f8;
+   background: #65a9d7;
+   background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+   background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+   background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+   background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+   background: -o-linear-gradient(top, #3e779d, #65a9d7);
+   padding: 5px 10px;
+   padding-left:45em
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;   
+   text-decoration: none;
+   vertical-align: middle;
+   top:50%;
+
+  right: 50%;
+   }
+.button:hover {
+   border-top-color: #28597a;
+   background: #28597a;
+   color: #ccc;
+   }
+.button:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }
+
+  </style>
+  <script type="text/javascript">
+
+  $(function() {
+    $( document ).tooltip();
+  });
+
+		$(function() {
+    $( "#accordion" ).accordion({
+	  heightStyle: "content";
+      event: "click hoverintent";
+    });
+  });
+ 
+  /*
+   * hoverIntent | Copyright 2011 Brian Cherne
+   * http://cherne.net/brian/resources/jquery.hoverIntent.html
+   * modified by the jQuery UI team
+   */
+  $.event.special.hoverintent = {
+    setup: function() {
+      $( this ).bind( "mouseover", jQuery.event.special.hoverintent.handler );
+    },
+    teardown: function() {
+      $( this ).unbind( "mouseover", jQuery.event.special.hoverintent.handler );
+    },
+    handler: function( event ) {
+      var currentX, currentY, timeout,
+        args = arguments,
+        target = $( event.target ),
+        previousX = event.pageX,
+        previousY = event.pageY;
+ 
+      function track( event ) {
+        currentX = event.pageX;
+        currentY = event.pageY;
+      };
+ 
+      function clear() {
+        target
+          .unbind( "mousemove", track )
+          .unbind( "mouseout", clear );
+        clearTimeout( timeout );
+      }
+ 
+      function handler() {
+        var prop,
+          orig = event;
+ 
+        if ( ( Math.abs( previousX - currentX ) +
+            Math.abs( previousY - currentY ) ) < 7 ) {
+          clear();
+ 
+          event = $.Event( "hoverintent" );
+          for ( prop in orig ) {
+            if ( !( prop in event ) ) {
+              event[ prop ] = orig[ prop ];
+            }
+          }
+          // Prevent accessing the original event since the new event
+          // is fired asynchronously and the old event is no longer
+          // usable (#6028)
+          delete event.originalEvent;
+ 
+          target.trigger( event );
+        } else {
+          previousX = currentX;
+          previousY = currentY;
+          timeout = setTimeout( handler, 100 );
+        }
+      }
+ 
+      timeout = setTimeout( handler, 100 );
+      target.bind({
+        mousemove: track,
+        mouseout: clear
+      });
+    }
+  };
+	</script>
+</head>
+
+<body>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Accordion - Open on hoverintent</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <style>
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    -moz-box-sizing: border-box;
+    border: 0 none;
+    font: inherit;
+    margin: 0;
+    outline: medium none;
+    padding: 0;
+    vertical-align: baseline;
+}
+html {
+    height: 101%;
+}
+body {
+    background: repeat scroll 0 0 #F0F0F0;
+    color: #313131;
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-size: 62.5%;
+    line-height: 1;
+}
+*::-moz-selection {
+    background: none repeat scroll 0 0 #A4DCEC;
+}
+:-moz-placeholder {
+    color: #CCCCCC;
+    font-style: italic;
+}
+*::-moz-placeholder {
+    color: #CCCCCC;
+    font-style: italic;
+}
+br {
+    display: block;
+    line-height: 2.2em;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+ol, ul {
+    list-style: none outside none;
+}
+input, textarea {
+    -moz-box-sizing: border-box;
+    outline: medium none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+    content: none;
+}
+strong {
+    font-weight: bold;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+img {
+    border: 0 none;
+    max-width: 100%;
+}
+#topbar {
+    background: none repeat scroll 0 0 #4F4A41;
+    padding: 10px 0;
+    text-align: center;
+}
+#topbar a {
+    color: #FFFFFF;
+    font-size: 1.3em;
+    font-weight: bold;
+    line-height: 1.25em;
+    opacity: 0.5;
+    text-decoration: none;
+}
+#topbar a:hover {
+    opacity: 1;
+}
+h1 {
+    color: #444444;
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-size: 2.5em;
+    letter-spacing: -0.05em;
+    line-height: 1.5em;
+    margin-bottom: 20px;
+    overflow: hidden;
+    padding: 0.1em 0;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+}
+h1:before, h1:after {
+    background: none repeat scroll 0 0 #F0F0F0;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+}
+h1:before {
+    left: -0.5em;
+    margin: 0 0 0 -50%;
+}
+h1:after {
+    left: 0.5em;
+    margin: 0 -50% 0 0;
+}
+h1 > span {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: normal;
+}
+p {
+    display: block;
+    font-size: 1.35em;
+    line-height: 1.5em;
+    margin-bottom: 22px;
+}
+a {
+    color: #5A9352;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+.center {
+    display: block;
+    text-align: center;
+}
+#w {
+    display: block;
+    margin: 0 auto;
+    padding-top: 30px;
+    width: 750px;
+}
+#content {
+    background: none repeat scroll 0 0 #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    display: block;
+    padding: 25px 20px 35px;
+    width: 100%;
+}
+#searchfield {
+    display: block;
+    margin-bottom: 35px;
+    text-align: center;
+    width: 100%;
+}
+#searchfield form {
+    background: none repeat scroll 0 0 #EEEFED;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 5px 0 0;
+    padding: 5px;
+}
+#searchfield form .biginput {
+    background-color: #FFFFFF;
+    border: 1px solid #C8C8C8;
+    border-radius: 3px;
+    color: #AEAEAE;
+    font-size: 1.5em;
+    font-weight: normal;
+    height: 40px;
+    padding: 0 10px;
+    transition: all 0.2s linear 0s;
+    width: 600px;
+}
+#searchfield form .biginput:focus {
+    color: #858585;
+}
+.flatbtn {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    -moz-box-sizing: border-box;
+    background-color: #6BB642;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-image: none;
+    border-radius: 3px;
+    border-style: none;
+    border-width: 0;
+    box-shadow: 0 1px 0 rgba(15, 15, 15, 0.3);
+    color: #F3FAEF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.2em;
+    font-weight: bold;
+    line-height: normal;
+    outline: 0 none;
+    padding: 12px 22px;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.flatbtn:hover {
+    background-color: #73C437;
+    color: #FFFFFF;
+}
+.flatbtn:active {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1) inset;
+}
+.autocomplete-suggestions {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #999999;
+    cursor: default;
+    overflow: auto;
+}
+.autocomplete-suggestion {
+    font-size: 1.2em;
+    overflow: hidden;
+    padding: 10px 5px;
+    white-space: nowrap;
+}
+.autocomplete-selected {
+    background: none repeat scroll 0 0 #F0F0F0;
+}
+.autocomplete-suggestions strong {
+    color: #3399FF;
+    font-weight: normal;
+}
+label {
+    display: inline-block;
+    margin-right: 30px;
+    text-align: right;
+    width: 100px;
+}
+input {
+}
+fieldset {
+    border: medium none;
+    margin: 0 auto;
+    width: 670px;
+}
+.button {
+    background: -moz-linear-gradient(center top , #3E779D, #65A9D7) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border-radius: 8px;
+    border-top: 1px solid #96D1F8;
+    box-shadow: 0 1px 0 #000000;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 5px 10px;
+    right: 50%;
+    text-decoration: none;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    top: 50%;
+    vertical-align: middle;
+}
+.button:hover {
+    background: none repeat scroll 0 0 #28597A;
+    border-top-color: #28597A;
+    color: #CCCCCC;
+}
+.button:active {
+    background: none repeat scroll 0 0 #1B435E;
+    border-top-color: #1B435E;
+}
+
+  </style>
+  <script>
+  $(function() {
+    $( "#accordion" ).accordion({
+      event: "click hoverintent"
+    });
+  });
+ 
+  /*
+   * hoverIntent | Copyright 2011 Brian Cherne
+   * http://cherne.net/brian/resources/jquery.hoverIntent.html
+   * modified by the jQuery UI team
+   */
+  $.event.special.hoverintent = {
+    setup: function() {
+      $( this ).bind( "mouseover", jQuery.event.special.hoverintent.handler );
+    },
+    teardown: function() {
+      $( this ).unbind( "mouseover", jQuery.event.special.hoverintent.handler );
+    },
+    handler: function( event ) {
+      var currentX, currentY, timeout,
+        args = arguments,
+        target = $( event.target ),
+        previousX = event.pageX,
+        previousY = event.pageY;
+ 
+      function track( event ) {
+        currentX = event.pageX;
+        currentY = event.pageY;
+      };
+ 
+      function clear() {
+        target
+          .unbind( "mousemove", track )
+          .unbind( "mouseout", clear );
+        clearTimeout( timeout );
+      }
+ 
+      function handler() {
+        var prop,
+          orig = event;
+ 
+        if ( ( Math.abs( previousX - currentX ) +
+            Math.abs( previousY - currentY ) ) < 7 ) {
+          clear();
+ 
+          event = $.Event( "hoverintent" );
+          for ( prop in orig ) {
+            if ( !( prop in event ) ) {
+              event[ prop ] = orig[ prop ];
+            }
+          }
+          // Prevent accessing the original event since the new event
+          // is fired asynchronously and the old event is no longer
+          // usable (#6028)
+          delete event.originalEvent;
+ 
+          target.trigger( event );
+        } else {
+          previousX = currentX;
+          previousY = currentY;
+          timeout = setTimeout( handler, 100 );
+        }
+      }
+ 
+      timeout = setTimeout( handler, 100 );
+      target.bind({
+        mousemove: track,
+        mouseout: clear
+      });
+    }
+  };
+        $(function() {
+                $( "#graphsearch" ).autocomplete({
+            source: function( request, response ) {
+                        $.ajax({
+                            url: "/searchUsername",
+                            dataType: "json",
+                            data: {
+                            search: request.term
+                            },
+                            
+                            success: function( data ) {
+                                response( $.map( data, function( item ) {
+                                    return {
+                                        label: item.value ,
+                                        value: item.key
+                                    }
+                                }));
+                             }
+                        });
+                },
+                minLength: 2,
+                select: function( event, ui ) {
+                },
+                open: function() {
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                },
+                close: function() {
+                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                }
+            });
+    });   
+  </script>
+</head>
+<body>
+<div id="w">
+    <div id="content">
+      <h1>The Powershell Project</h1>
+      <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Just start typing what operation you want to perform and predictive results will be supplied...</p>
+      
+      <div id="searchfield">
+        <form><input type="text" name="input" class="biginput" id="graphsearch"></form>
+      </div><!-- @end #searchfield --> 
+	  <div id="a">
+        <div id="content">
+			<h1>Add a Stock</h1>
+			<div id="accordion">
+			<h3>Cusip Info</h3>
+			<fieldset>
+			<label for="txtCompanyCusipNumber"> Company Cusip:</label><input type="text" name="txtCompanyCusipNumber" title="Company Cusip Number is mandatory.">
+			<label for="txtCompanyCusipNumber">Issue Cusip:</label><input type="text" name="txtCompanyCusipNumber" title="Issue Cusip Number is mandatory.">
+			<label for="txtCusipCreateDate">Cusip Date:</label><input type="text" name="txtCusipCreateDate" title="Cusip Date is mandatory.">				
+		</fieldset>
+		<h3>Payment Info</h3>
+		<fieldset>
+			<label for="txtCompanyCusipNumber"> Company Cusip:</label><input type="text" name="txtCompanyCusipNumber" title="Cusip Number is mandatory.">
+			<label for="txtCompanyCusipNumber">Issue Cusip:</label><input type="text" name="txtCompanyCusipNumber">
+			<label for="txtCusipCreateDate">Cusip Date:</label><input type="text" name="txtCusipCreateDate" >				
+		</fieldset>
+		<h3>General Info</h3>
+		<fieldset>
+			<label for="txtCompanyCusipNumber"> Company Cusip:</label><input type="text" name="txtCompanyCusipNumber" title="Cusip Number is mandatory.">
+			<label for="txtCompanyCusipNumber">Issue Cusip:</label><input type="text" name="txtCompanyCusipNumber">
+			<label for="txtCusipCreateDate">Cusip Date:</label><input type="text" name="txtCusipCreateDate" >				
+		</fieldset>
+		<h3>Additional Info</h3>
+		<fieldset>
+			<label for="txtCompanyCusipNumber"> Company Cusip:</label><input type="text" name="txtCompanyCusipNumber" title="Cusip Number is mandatory.">
+			<label for="txtCompanyCusipNumber">Issue Cusip:</label><input type="text" name="txtCompanyCusipNumber">
+			<label for="txtCusipCreateDate">Cusip Date:</label><input type="text" name="txtCusipCreateDate" >				
+		</fieldset>
+		</div><!--Accordian ends-->
+		<pre> 
+ 								<button class="button">Save</button>					<button class="button">Cancel</button>
+	</pre>
+	
+  </div><!--Content ends-->
+</div><!--a ends-->
+<pre>	
+										&copy; SUNGARD HACKATHON 2013 - Team JAAAM
+</pre>
+</div><!--content ends-->
+
+</div><!--W ends-->
+ 
+</body>
+</html>
+  

@@ -1,0 +1,24 @@
+hello_greycelled_enapp.py:
+--------------------------
+The core of the module which integrates the presentation with the application logic using 
+the bottle web framework.
+As the user types in the powershell, the call is made to the graph database (Neo4j) running in
+the port 7474 and fetches the list of operational nodes traversed from the function's node the user is 
+interested in.
+Then subsequently the call is made to the mongodb running in port 27017, where the user system usage pattern's (user usage pattern)
+features are stored. That is fetched and the system makes a prediction (statistically) to find 
+the most probable function the user is thinking to use. The feature vector (signal) used in the hacakathon
+was user-function-operation frequency but the feature vector can be added to include the time of user's access of the 
+function, day of the week, special months like IRS processing months/other signicant details specific
+to the product which tells more information and increases prediction accuracy. 
+
+How to integrate this powershell with any existing Sungard Product?
+-------------------------------------------------------------------
+The power shell does not disturb any of the actual working of the underlying application.
+1. A simple HTML text box (which will eventually be the power shell) needs to be the added in the application's
+presentation layer. (can be displayed once the user logs in)
+2. Then the powershell can be made intelligent by topping it up with "hello_greycelled_enapp.py" or the same logic 
+written in that particular app's prg lng. The graph database of the functions and operations possible
+on that particular application is created as a seperate offline activity. 
+This graph creation is one time activity and the graph needs to be updated only when a new function/operation is added.
+But eventually what the end user of the system gets is a much more intelligent interaction with the system.
